@@ -1,0 +1,189 @@
+consumes:
+    - application/json
+definitions:
+    Article:
+        description: Article
+        properties:
+            author:
+                description: |-
+                    Author of the article
+                    in: string
+                type: string
+            content:
+                description: |-
+                    Content of the article
+                    in: string
+                type: string
+            id:
+                description: |-
+                    ID of the article
+                    in: int
+                format: int64
+                type: integer
+            title:
+                description: |-
+                    Title of the article
+                    in: string
+                type: string
+        type: object
+    Response:
+        description: Response
+        properties:
+            data:
+                description: Any type of Response data or null
+            message:
+                description: Success or error message
+                type: string
+            status:
+                description: Status code of the response
+                format: int64
+                type: integer
+        type: object
+host: localhost:8080
+info:
+    description: Package api
+    version: 0.0.1
+paths:
+    /:
+        get:
+            operationId: healthCheck
+            responses:
+                "200":
+                    $ref: '#/responses/SuccessResponse'
+                "500":
+                    $ref: '#/responses/ErrorResponse'
+            summary: Performs a basic health check of the service.
+    /articles:
+        get:
+            operationId: allArticle
+            responses:
+                "200":
+                    $ref: '#/responses/ArticleListResponse'
+                "500":
+                    $ref: '#/responses/ErrorResponse'
+            summary: Retrieve a list of articles.
+        post:
+            description: Parses a JSON request to create a new article and returns the result.
+            operationId: InsertArticle
+            parameters:
+                - description: The article data to be created.
+                  in: body
+                  name: article
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Article'
+            responses:
+                "201":
+                    $ref: '#/responses/ArticleResponse'
+                    description: Created
+                "500":
+                    $ref: '#/responses/ErrorResponse'
+            summary: Create an article.
+    /articles/{id}:
+        get:
+            operationId: idParameter
+            parameters:
+                - example: 1
+                  format: int
+                  in: path
+                  name: id
+                  required: true
+                  type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    $ref: '#/responses/ArticleListResponse'
+                "500":
+                    $ref: '#/responses/ErrorResponse'
+            summary: Retrieve an article by its ID.
+produces:
+    - application/json
+responses:
+    Article:
+        description: Article
+        headers:
+            author:
+                description: |-
+                    Author of the article
+                    in: string
+                type: string
+            content:
+                description: |-
+                    Content of the article
+                    in: string
+                type: string
+            id:
+                description: |-
+                    ID of the article
+                    in: int
+                format: int64
+                type: integer
+            title:
+                description: |-
+                    Title of the article
+                    in: string
+                type: string
+    ArticleListResponse:
+        description: ArticleListResponse
+        schema:
+            properties:
+                data:
+                    items:
+                        $ref: '#/definitions/Article'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int64
+                    type: integer
+            type: object
+    ArticleResponse:
+        description: ArticleResponse
+        schema:
+            properties:
+                data:
+                    $ref: '#/definitions/Article'
+                message:
+                    type: string
+                status:
+                    format: int64
+                    type: integer
+            type: object
+    ErrorResponse:
+        description: ErrorResponse
+        schema:
+            $ref: '#/definitions/Response'
+    Response:
+        description: Response
+        headers:
+            data:
+                description: Any type of Response data or null
+            message:
+                description: Success or error message
+                type: string
+            status:
+                description: Status code of the response
+                format: int64
+                type: integer
+        schema: {}
+    ResponseCreateArticle:
+        description: ResponseCreateArticle
+        schema:
+            properties:
+                data:
+                    format: int64
+                    type: integer
+                message:
+                    type: string
+                status:
+                    format: int64
+                    type: integer
+            type: object
+    SuccessResponse:
+        description: SuccessResponse
+        schema:
+            $ref: '#/definitions/Response'
+schemes:
+    - http
+swagger: "2.0"

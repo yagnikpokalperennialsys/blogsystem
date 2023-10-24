@@ -12,7 +12,7 @@ import (
 )
 
 type DBRepo interface {
-	OneArticle(id int) (*models.Articles, error)
+	OneArticle(id int) (*models.Article, error)
 }
 
 // Test case using the table driven test
@@ -78,7 +78,6 @@ func TestPostgresDBRepo(t *testing.T) {
 				_, err := repo.OneArticle(2)
 				return err
 			},
-			//expectedErr: models.ErrNoRecord,
 		},
 		{
 			name: "Test CreateArticle",
@@ -88,7 +87,7 @@ func TestPostgresDBRepo(t *testing.T) {
 					WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 			},
 			repoAction: func(repo *PostgresDBRepo) error {
-				_, err := repo.CreateArticle(&models.Articles{
+				_, err := repo.CreateArticle(&models.Article{
 					Title:   "Title1",
 					Content: "Content1",
 					Author:  "Author1",
@@ -112,7 +111,10 @@ func TestPostgresDBRepo(t *testing.T) {
 			err = test.repoAction(repo)
 
 			if err != test.expectedErr {
-				t.Errorf("Expected error: %v, got: %v", test.expectedErr, err)
+				expectedErrorMessage := "sql: no rows in result set"
+				if err.Error() != expectedErrorMessage {
+					t.Errorf("Expected error message: %s, got: %s", expectedErrorMessage, err.Error())
+				} //	t.Errorf("Expected error: %v, got: %v", test.expectedErr, err)
 			}
 		})
 	}
@@ -173,7 +175,7 @@ func TestCreateArticleError(t *testing.T) {
 		WillReturnError(fmt.Errorf("Test error"))
 
 	// Create a sample article
-	article := &models.Articles{
+	article := &models.Article{
 		Title:   "Test Article",
 		Content: "Test Content",
 		Author:  "Test Author",

@@ -1,9 +1,9 @@
 # Backend Coding Challenge
 
 ## Run the app on the docker
- - Created the docker and docker compose file to run the go code and databse into the separate container
+ - Created the docker and docker compose file to run the go code and database into the separate container
 ```
-docker compose up
+make run
 ```
 ![!\[Alt text\](image-3.png)](<doc/image 1.png>)
 
@@ -48,17 +48,18 @@ curl --location 'http://localhost:8080/articles'
 ![Alt text](<doc/image 7.png>)
 
 ## Clean code / Development practice
-- Followed by using the separate busines logic, db, utility, models, constatnts, db query etc
+- Followed by using the separate business logic, db, utility, models, constants, db query, etc
 ```
 .
 ├── api
+│   ├── docs.go
 │   ├── handlers.go
 │   ├── handler_test.go
-│   ├── mocks
-│   │   └── mock_handlers.go
 │   ├── router_test.go
 │   └── routes.go
 ├── doc
+│   ├── image 10.png
+│   ├── image 11.png
 │   ├── image 1.png
 │   ├── image 2.png
 │   ├── image 3.png
@@ -66,50 +67,76 @@ curl --location 'http://localhost:8080/articles'
 │   ├── image 5.png
 │   ├── image 6.png
 │   ├── image 7.png
-│   └── image 8.png
+│   ├── image 8.png
+│   └── image 9.png
 ├── docker-compose.yml
 ├── Dockerfile
 ├── go.mod
 ├── go.sum
 ├── main.go
+├── Makefile
+├── mocks
+│   ├── mock_handlers.go
+│   ├── mock_routes.go
+│   └── mock_service.go
 ├── pkg
-│   ├── const
-│   │   └── constant.go
+│   ├── appconstant
+│   │   ├── error.go
+│   │   ├── log.go
+│   │   ├── message.go
+│   │   └── port.go
 │   ├── db
 │   │   ├── db.go
 │   │   └── db_test.go
 │   ├── models
 │   │   ├── articles.go
-│   │   └── response.go
+│   │   ├── response.go
+│   │   └── swagger.yaml
 │   ├── repository
-│   │   ├── dbrepo
-│   │   │   ├── postgres_dbrepo.go
-│   │   │   └── postgres_dbrepo_test.go
-│   │   └── repository.go
+│   │   └── dbrepo
+│   │       ├── postgres_dbrepo.go
+│   │       └── postgres_dbrepo_test.go
 │   └── utility
 │       ├── utils.go
 │       └── utils_test.go
-└── readme.md
+├── readme.md
+├── services
+│   └── articles
+│       ├── articles_service.go
+│       └── articles_services_test.go
+├── swagger copy.yaml
+├── swagger.json
+└── swagger.yaml
+12 directories, 44 files, 13372 lines
 ```
 
 ## Test coverage
+```
+make test
+```
 - Achieved >85% test coverage
 
+```
+make cover
+```
 
 ```
-go test ./... -cover
-```
-
-```
-?       backend [no test files]
-?       backend/api/mocks       [no test files]
-?       backend/pkg/models      [no test files]
-?       backend/pkg/repository  [no test files]
-?       backend/pkg/const       [no test files]
-ok      backend/api     0.011s                   coverage: 85.4% of statements
-ok      backend/pkg/db  (cached)                 coverage: 91.7% of statements
-ok      backend/pkg/repository/dbrepo   (cached) coverage: 88.6% of statements
-ok      backend/pkg/utility     (cached)         coverage: 86.7% of statements
+ok      backend/api     (cached)                  coverage: 85.7% of statements
+ok      backend/pkg/db  (cached)                  coverage: 91.7% of statements
+ok      backend/pkg/repository/dbrepo   (cached)  coverage: 88.6% of statements
+ok      backend/pkg/utility     (cached)          coverage: 86.7% of statements
+ok      backend/services/articles       (cached)  coverage: 100.0% of statements
 ```
 ## Error logging in containers
 ![Alt text](<doc/image 8.png>)
+
+## Swagger run
+```
+make swagger
+```
+![Alt text](<doc/image 9.png>)
+
+## Swagger UI
+![Alt text](<doc/image 10.png>)
+
+![Alt text](<doc/image 11.png>)
