@@ -29,11 +29,11 @@ mocks:
 	echo "Mock interfaces generated successfully."
 
 swaggergenerate:
-	SWAGGER_GENERATE_EXTENSION=false swagger generate spec -o swagger.yaml
+	SWAGGER_GENERATE_EXTENSION=false swagger generate spec -o ./api/swagger.yaml
 
 # Serve Swagger UI using the `swagger` command with the `-F swagger` flag.
 swagger:
-	swagger serve swagger.yaml -F swagger
+	swagger serve ./api/swagger.yaml -F swagger
 
 # Display help message.
 help:

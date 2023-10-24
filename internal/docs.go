@@ -1,4 +1,4 @@
-// Package api
+// Package internal
 //
 // Schemes:http
 // Version:0.0.1
@@ -14,4 +14,4 @@
 // - basic
 //
 // swagger:meta
-package api
+package internal

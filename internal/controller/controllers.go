@@ -1,9 +1,11 @@
-package api
+package controller
 
 import (
 	appconst "backend/pkg/appconstant"
 	"backend/pkg/models"
+	"backend/pkg/repository/dbrepo"
 	"backend/pkg/utility"
+	services "backend/services/articles"
 	"database/sql"
 	"log"
 	"net/http"
@@ -28,6 +30,18 @@ type UtilityInterface interface {
 	WriteJSON(w http.ResponseWriter, status int, data interface{}) error
 	ReadJSON(w http.ResponseWriter, r *http.Request, data interface{}) error
 }
+type Controller struct {
+	DSN            string
+	DB             dbrepo.DatabaseRepo
+	Utility        UtilityInterface
+	ArticleService *services.ArticleService
+}
+type Handler interface {
+	HealthCheck(w http.ResponseWriter, r *http.Request)
+	AllArticle(w http.ResponseWriter, r *http.Request)
+	GetArticle(w http.ResponseWriter, r *http.Request)
+	InsertArticle(w http.ResponseWriter, r *http.Request)
+}
 
 // HealthCheck performs a basic health check of the service.
 //
@@ -39,7 +53,7 @@ type UtilityInterface interface {
 //   200: SuccessResponse
 //	500: ErrorResponse
 
-func (app *Application) HealthCheck(w http.ResponseWriter, r *http.Request) {
+func (app *Controller) HealthCheck(w http.ResponseWriter, r *http.Request) {
 	// Create the response struct
 	var response models.Response
 
@@ -60,7 +74,7 @@ func (app *Application) HealthCheck(w http.ResponseWriter, r *http.Request) {
 //
 //	200: ArticleListResponse
 //	500: ErrorResponse
-func (app *Application) AllArticle(w http.ResponseWriter, r *http.Request) {
+func (app *Controller) AllArticle(w http.ResponseWriter, r *http.Request) {
 	// Retrieve the list of articles from the database
 	articles, err := app.ArticleService.GetAllArticles()
 	if err != nil {
@@ -92,7 +106,7 @@ func (app *Application) AllArticle(w http.ResponseWriter, r *http.Request) {
 //	200: ArticleListResponse
 //	500: ErrorResponse
 
-func (app *Application) GetArticle(w http.ResponseWriter, r *http.Request) {
+func (app *Controller) GetArticle(w http.ResponseWriter, r *http.Request) {
 	// Get the article ID from the URL parameter
 	id := chi.URLParam(r, "id")
 	articleID, err := strconv.Atoi(id)
@@ -135,7 +149,7 @@ func (app *Application) GetArticle(w http.ResponseWriter, r *http.Request) {
 //   500:
 //     $ref: '#/responses/ErrorResponse'
 
-func (app *Application) InsertArticle(w http.ResponseWriter, r *http.Request) {
+func (app *Controller) InsertArticle(w http.ResponseWriter, r *http.Request) {
 	// Parse the JSON request body into an Article struct
 	var article models.Article
 	err := utility.ReadJSON(w, r, &article)

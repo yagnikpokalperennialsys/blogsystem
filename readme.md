@@ -50,17 +50,16 @@ curl --location 'http://localhost:8080/articles'
 ## Clean code / Development practice
 - Followed by using the separate business logic, db, utility, models, constants, db query, etc
 ```
+tree
 .
+├── Dockerfile
+├── Makefile
 ├── api
-│   ├── docs.go
-│   ├── handlers.go
-│   ├── handler_test.go
-│   ├── router_test.go
-│   └── routes.go
+│   └── swagger.yaml
 ├── doc
+│   ├── image 1.png
 │   ├── image 10.png
 │   ├── image 11.png
-│   ├── image 1.png
 │   ├── image 2.png
 │   ├── image 3.png
 │   ├── image 4.png
@@ -70,11 +69,17 @@ curl --location 'http://localhost:8080/articles'
 │   ├── image 8.png
 │   └── image 9.png
 ├── docker-compose.yml
-├── Dockerfile
 ├── go.mod
 ├── go.sum
+├── internal
+│   ├── controller
+│   │   ├── controllers.go
+│   │   └── controllers_test.go
+│   ├── docs.go
+│   └── routes
+│       ├── routes.go
+│       └── routes_test.go
 ├── main.go
-├── Makefile
 ├── mocks
 │   ├── mock_handlers.go
 │   ├── mock_routes.go
@@ -90,8 +95,8 @@ curl --location 'http://localhost:8080/articles'
 │   │   └── db_test.go
 │   ├── models
 │   │   ├── articles.go
-│   │   ├── response.go
-│   │   └── swagger.yaml
+│   │   ├── docs.go
+│   │   └── response.go
 │   ├── repository
 │   │   └── dbrepo
 │   │       ├── postgres_dbrepo.go
@@ -100,32 +105,30 @@ curl --location 'http://localhost:8080/articles'
 │       ├── utils.go
 │       └── utils_test.go
 ├── readme.md
-├── services
-│   └── articles
-│       ├── articles_service.go
-│       └── articles_services_test.go
-├── swagger copy.yaml
-├── swagger.json
-└── swagger.yaml
-12 directories, 44 files, 13372 lines
+└── services
+    └── articles
+        ├── articles_service.go
+        └── articles_services_test.go
+
+16 directories, 42 files, 13146 lines
 ```
 
 ## Test coverage
 ```
 make test
 ```
-- Achieved >85% test coverage
+- Achieved >75% test coverage
 
 ```
 make cover
 ```
-
 ```
-ok      backend/api     (cached)                  coverage: 85.7% of statements
-ok      backend/pkg/db  (cached)                  coverage: 91.7% of statements
-ok      backend/pkg/repository/dbrepo   (cached)  coverage: 88.6% of statements
-ok      backend/pkg/utility     (cached)          coverage: 86.7% of statements
-ok      backend/services/articles       (cached)  coverage: 100.0% of statements
+ok      backend/internal/routes (cached)        coverage: 100.0% of statements
+ok      backend/pkg/db  (cached)                coverage: 91.7% of statements
+ok      backend/pkg/repository/dbrepo           coverage: 88.6% of statements
+ok      backend/internal/handlers       0.358s  coverage: 78.7% of statements
+ok      backend/pkg/utility     (cached)        coverage: 86.7% of statements
+ok      backend/services/articles               coverage: 100.0% of statements
 ```
 ## Error logging in containers
 ![Alt text](<doc/image 8.png>)

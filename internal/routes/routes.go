@@ -1,6 +1,7 @@
-package api
+package routes
 
 import (
+	"backend/internal/controller"
 	"backend/pkg/repository/dbrepo"
 	services "backend/services/articles"
 	"net/http"
@@ -14,14 +15,9 @@ import (
 type Application struct {
 	DSN            string
 	DB             dbrepo.DatabaseRepo
-	Utility        UtilityInterface
+	Utility        controller.UtilityInterface
 	ArticleService *services.ArticleService
-}
-type Routes interface {
-	HealthCheck(w http.ResponseWriter, r *http.Request)
-	AllArticle(w http.ResponseWriter, r *http.Request)
-	GetArticle(w http.ResponseWriter, r *http.Request)
-	InsertArticle(w http.ResponseWriter, r *http.Request)
+	Handler        controller.Controller
 }
 
 func (app *Application) Routes() http.Handler {
@@ -38,10 +34,10 @@ func (app *Application) Routes() http.Handler {
 	// Use the CORS middleware
 	mux.Use(c.Handler)
 	mux.Use(middleware.Recoverer)
-	mux.Get("/", app.HealthCheck)
-	mux.Get("/articles", app.AllArticle)
-	mux.Get("/articles/{id}", app.GetArticle)
-	mux.Post("/articles", app.InsertArticle)
+	mux.Get("/", app.Handler.HealthCheck)
+	mux.Get("/articles", app.Handler.AllArticle)
+	mux.Get("/articles/{id}", app.Handler.GetArticle)
+	mux.Post("/articles", app.Handler.InsertArticle)
 
 	return mux
 }

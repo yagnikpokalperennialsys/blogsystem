@@ -1,7 +1,8 @@
 package main
 
 import (
-	"backend/api"
+	"backend/internal/controller"
+	"backend/internal/routes"
 	appconst "backend/pkg/appconstant"
 	"backend/pkg/db"
 	"backend/pkg/repository/dbrepo"
@@ -18,7 +19,8 @@ import (
 
 func main() {
 	// Set application config
-	var app api.Application
+	var app routes.Application
+
 	// Read from the command line
 	flag.StringVar(&app.DSN, "dsn", "host=postgres port=5432 user=postgres password=postgres dbname=articles sslmode=disable timezone=UTC connect_timeout=5", "Postgres connection string")
 	flag.Parse()
@@ -39,8 +41,16 @@ func main() {
 	// Initialize the ArticleService with the DatabaseRepo
 	articleService := services.NewArticleService(app.DB)
 
-	// Set the ArticleService in the Application
-	app.ArticleService = articleService
+	// Create the MyApplication instance and pass the dependencies
+	myApp := controller.Controller{
+		DSN:            app.DSN,
+		DB:             app.DB,
+		Utility:        app.Utility, // You can replace this with your actual utility implementation
+		ArticleService: articleService,
+	}
+
+	// Set the handlers for your application
+	app.Handler = myApp
 
 	log.Println(appconst.Startapp, appconst.Port)
 
